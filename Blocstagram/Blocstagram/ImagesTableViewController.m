@@ -7,10 +7,14 @@
 //
 
 #import "ImagesTableViewController.h"
+#import "User.h"
+#import "Comment.h"
+#import "Media.h"
+#import "DataSource.h"
 
 @interface ImagesTableViewController ()
 
-@property (nonatomic, strong) NSMutableArray *images;
+- (NSArray *) items;
 
 @end
 
@@ -20,23 +24,18 @@
     self = [super initWithStyle:style];
     
     if (self) {
-        self.images = [NSMutableArray array];
     }
     
     return self;
 }
 
+- (NSArray *) items {
+    return [DataSource sharedInstance].mediaItems;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    for (int i = 1; i <= 10; i++) {
-        NSString *imageName = [NSString stringWithFormat:@"%d.jpg", i];
-        UIImage *image = [UIImage imageNamed:imageName];
-        
-        if (image) {
-            [self.images addObject:image];
-        }
-    }
     
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"imageCell"];
 }
@@ -49,7 +48,7 @@
 #pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.images.count;
+    return [self items].count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -67,14 +66,15 @@
         [cell.contentView addSubview:imageView];
     }
     
-    UIImage *image = self.images[indexPath.row];
-    imageView.image = image;
+    Media *media = self.items[indexPath.row];
+    imageView.image = media.image;
     
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UIImage *image = self.images[indexPath.row];
+    Media *media = self.items[indexPath.row];
+    UIImage *image = media.image;
     return (CGRectGetWidth(self.view.frame) / image.size.width) * image.size.height;
 }
 
@@ -88,7 +88,10 @@
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [self.images removeObjectAtIndex:indexPath.row];
+//        NSMutableArray *data = [[DataSource sharedInstance].mediaItems mutableCopy];
+//        [data removeObjectAtIndex:indexPath.row];
+        [[DataSource sharedInstance] deleteRow:indexPath.row];
+        
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
 
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
