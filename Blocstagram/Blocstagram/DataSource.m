@@ -34,14 +34,14 @@
 - (instancetype) init {
     self = [super init];
     if (self) {
-        [self randomData];
+        [self addRandomData];
     }
     
     return self;
 }
 
 
-- (void) randomData {
+- (void) addRandomData {
     NSMutableArray *randomMediaItems = [NSMutableArray array];
     
     for (int i = 1; i <= 10; i++) {
@@ -72,9 +72,9 @@
 
 - (User *) randomUser {
     User *user = [[User alloc] init];
-    user.userName = [self randomStringofLength:arc4random_uniform(10)];
-    NSString *firstName = [self randomStringofLength:arc4random_uniform(7)];
-    NSString *lastName = [self randomStringofLength:arc4random_uniform(12)];
+    user.userName = [self randomStringofLength:arc4random_uniform(10) + 1];
+    NSString *firstName = [self randomStringofLength:arc4random_uniform(7) + 1];
+    NSString *lastName = [self randomStringofLength:arc4random_uniform(12) + 1];
     user.fullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
     
     return user;
@@ -88,10 +88,10 @@
 }
 
 - (NSString *) randomSentence {
-    NSUInteger wordCount = arc4random_uniform(20);
+    NSUInteger wordCount = arc4random_uniform(20) + 1;
     NSMutableString *randomSentence = [[NSMutableString alloc] init];
     for (int i = 1; i <= wordCount; i++) {
-        NSString *randomWord = [self randomStringofLength:arc4random_uniform(12)];
+        NSString *randomWord = [self randomStringofLength:arc4random_uniform(12) + 1];
         [randomSentence appendFormat:@"%@ ", randomWord];
     }
     
