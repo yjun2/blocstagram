@@ -11,7 +11,9 @@
 #import "Comment.h"
 #import "User.h"
 
-@interface DataSource()
+@interface DataSource() {
+    NSMutableArray *_mediaItems;
+}
 
 // Redefine 'mediaItems' by removing 'readonly'.
 // Only the DataSource instance can modify this property
@@ -110,9 +112,41 @@
     return [NSString stringWithString:s];
 }
 
-- (void) deleteRow:(NSUInteger)index {
-    NSMutableArray *mutableMediaItems = [self.mediaItems mutableCopy];
-    [mutableMediaItems removeObjectAtIndex:index];
-    self.mediaItems = mutableMediaItems;
+- (void) deleteMediaItem:(Media *)item {
+    NSMutableArray *mutableArrayWithKVO = [self mutableArrayValueForKey:@"mediaItems"];
+    [mutableArrayWithKVO removeObject:item];
 }
+
+// checkpoint #30 assignment
+- (void) moveToTop:(NSUInteger)index {
+    NSMutableArray *mutableArrayWithKVO = [self mutableArrayValueForKey:@"mediaItems"];
+    [mutableArrayWithKVO exchangeObjectAtIndex:0 withObjectAtIndex:index];
+}
+
+#pragma mark - key value observation
+
+- (NSUInteger) countOfMediaItems {
+    return self.mediaItems.count;
+}
+
+- (id) objectInMediaItemsAtIndex:(NSUInteger)index {
+    return [self.mediaItems objectAtIndex:index];
+}
+
+- (NSArray *) mediaItemsAtIndexes:(NSIndexSet *)indexes {
+    return [self.mediaItems objectsAtIndexes:indexes];
+}
+
+- (void) insertObject:(Media *)object inMediaItemsAtIndex:(NSUInteger)index {
+    [_mediaItems insertObject:object atIndex:index];
+}
+
+- (void) removeObjectFromMediaItemsAtIndex:(NSUInteger)index {
+    [_mediaItems removeObjectAtIndex:index];
+}
+
+- (void) replaceObjectInMediaItemsAtIndex:(NSUInteger)index withObject:(id)object {
+    [_mediaItems replaceObjectAtIndex:index withObject:object];
+}
+
 @end

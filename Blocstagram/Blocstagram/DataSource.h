@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Media.h"
 
 @interface DataSource : NSObject
 
@@ -15,6 +16,9 @@
 // readonly. prevent other classes from modifying it
 @property (nonatomic, strong, readonly) NSArray *mediaItems;
 
-- (void) deleteRow:(NSUInteger) index;
+- (void) deleteMediaItem:(Media *)item;
+
+// checkpoint #30 assignment
+- (void) moveToTop:(NSUInteger)index;
 
 @end
