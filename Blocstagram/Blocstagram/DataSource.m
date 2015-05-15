@@ -15,9 +15,9 @@
     NSMutableArray *_mediaItems;
 }
 
-// Redefine 'mediaItems' by removing 'readonly'.
-// Only the DataSource instance can modify this property
 @property (nonatomic, strong) NSArray *mediaItems;
+@property (nonatomic, assign) BOOL isRefreshing;
+@property (nonatomic, assign) BOOL isLoadingOlderItems;
 
 @end
 
@@ -121,6 +121,52 @@
 - (void) moveToTop:(NSUInteger)index {
     NSMutableArray *mutableArrayWithKVO = [self mutableArrayValueForKey:@"mediaItems"];
     [mutableArrayWithKVO exchangeObjectAtIndex:0 withObjectAtIndex:index];
+}
+
+#pragma mark - pull to fetch
+
+- (void)requestNewItemsWithCompletionHandler:(NewItemCompletionBlock)completionHandler {
+    if (self.isRefreshing == NO) {
+        self.isRefreshing = YES;
+        
+        // create a new media image
+        Media *media = [[Media alloc] init];
+        media.user = [self randomUser];
+        media.image = [UIImage imageNamed:@"10.jpg"];
+        media.caption = [self randomSentence];
+        
+        // add the new media to the first
+        NSMutableArray *mutableArrayKVO = [self mutableArrayValueForKey:@"mediaItems"];
+        [mutableArrayKVO insertObject:media atIndex:0];
+        
+        self.isRefreshing = NO;
+        
+        if (completionHandler) {
+            completionHandler(nil);
+        }
+    }
+}
+
+- (void)requestOldItemsWithCompletionHandler:(NewItemCompletionBlock)completionHandler {
+    if (self.isLoadingOlderItems == NO) {
+        self.isLoadingOlderItems = YES;
+        
+        // create a new media image
+        Media *media = [[Media alloc] init];
+        media.user = [self randomUser];
+        media.image = [UIImage imageNamed:@"1.jpg"];
+        media.caption = [self randomSentence];
+        
+        // add the new media to the first
+        NSMutableArray *mutableArrayKVO = [self mutableArrayValueForKey:@"mediaItems"];
+        [mutableArrayKVO addObject:media];
+        
+        self.isLoadingOlderItems = NO;
+        
+        if (completionHandler) {
+            completionHandler(nil);
+        }
+    }
 }
 
 #pragma mark - key value observation

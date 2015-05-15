@@ -42,6 +42,9 @@
                                      options:0
                                      context:nil];
     
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.refreshControl addTarget:self action:@selector(refreshControlDidFire:) forControlEvents:UIControlEventValueChanged];
+    
 //    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"imageCell"];
     [self.tableView registerClass:[MediaTableViewCell class] forCellReuseIdentifier:@"mediaCell"];
 
@@ -82,20 +85,38 @@
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-//        Media *item = self.items[indexPath.row];
-//        [[DataSource sharedInstance] deleteMediaItem:item];
+        Media *item = self.items[indexPath.row];
+        [[DataSource sharedInstance] deleteMediaItem:item];
         
-        if (indexPath.row != 0) {
-            [[DataSource sharedInstance] moveToTop:indexPath.row];
-        } else { // trying to move the first element.  do nothing and just reload
-            [self.tableView reloadData];
-        }
+//        if (indexPath.row != 0) {
+//            [[DataSource sharedInstance] moveToTop:indexPath.row];
+//        } else { // trying to move the first element.  do nothing and just reload
+//            [self.tableView reloadData];
+//        }
         
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }   
 }
 
+#pragma mark - UIRefreshControl
+
+- (void) refreshControlDidFire:(UIRefreshControl *) sender {
+    [[DataSource sharedInstance] requestNewItemsWithCompletionHandler:^(NSError *error) {
+        [sender endRefreshing];
+    }];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self infiniteScrollIfNecessary];
+}
+
+- (void) infiniteScrollIfNecessary {
+    NSIndexPath *bottomIndexPath = [[self.tableView indexPathsForVisibleRows] lastObject];
+    if (bottomIndexPath && bottomIndexPath.row == [DataSource sharedInstance].mediaItems.count - 1) {
+        [[DataSource sharedInstance] requestOldItemsWithCompletionHandler:nil];
+    }
+}
 
 #pragma mark - key-value observing
 
