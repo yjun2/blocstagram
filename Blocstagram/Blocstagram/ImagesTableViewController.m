@@ -88,15 +88,18 @@
         Media *item = self.items[indexPath.row];
         [[DataSource sharedInstance] deleteMediaItem:item];
         
-//        if (indexPath.row != 0) {
-//            [[DataSource sharedInstance] moveToTop:indexPath.row];
-//        } else { // trying to move the first element.  do nothing and just reload
-//            [self.tableView reloadData];
-//        }
-        
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }   
+}
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    Media *media = [DataSource sharedInstance].mediaItems[indexPath.row];
+    if (media.image) {
+        return 350;
+    } else {
+        return 150;
+    }
 }
 
 #pragma mark - UIRefreshControl

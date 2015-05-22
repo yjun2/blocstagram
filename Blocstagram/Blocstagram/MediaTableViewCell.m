@@ -111,23 +111,6 @@ static NSParagraphStyle *paragraphRightAlignedStyle;
                                                                    constant:100];
         self.imageHeightConstraint.identifier = @"Image height constraint";
         
-//        self.imageWidthConstraint = [NSLayoutConstraint constraintWithItem:_mediaImageView
-//                                                                  attribute:NSLayoutAttributeWidth
-//                                                                  relatedBy:NSLayoutRelationEqual
-//                                                                     toItem:nil
-//                                                                  attribute:NSLayoutAttributeNotAnAttribute
-//                                                                 multiplier:1
-//                                                                   constant:100];
-//        self.imageWidthConstraint.identifier = @"Image width constraint";
-//        
-//        self.imageHeightConstraintX = [NSLayoutConstraint constraintWithItem:_mediaImageView
-//                                                                   attribute:NSLayoutAttributeCenterX
-//                                                                   relatedBy:NSLayoutRelationEqual
-//                                                                      toItem:self.contentView
-//                                                                   attribute:NSLayoutAttributeCenterX
-//                                                                  multiplier:1
-//                                                                    constant:0];
-        
         self.usernameAndCaptionLabelHeightConstraint = [NSLayoutConstraint constraintWithItem:_usernameAndCaptionLabel
                                                                                     attribute:NSLayoutAttributeHeight
                                                                                     relatedBy:NSLayoutRelationEqual
@@ -152,6 +135,7 @@ static NSParagraphStyle *paragraphRightAlignedStyle;
     
     return self;
 }
+
 
 - (NSAttributedString *) usernameAndCaptionString {
     CGFloat usernameFontSize = 15;
@@ -179,16 +163,7 @@ static NSParagraphStyle *paragraphRightAlignedStyle;
         NSString *baseString = [NSString stringWithFormat:@"%@ %@\n", comment.from.userName, comment.text];
         
         NSMutableAttributedString *oneCommentString = nil;
-        if (index == 0) { // change the first comment color to orange
-            oneCommentString = [[NSMutableAttributedString alloc] initWithString:baseString attributes:@{NSFontAttributeName : lightFont, NSForegroundColorAttributeName : firstComment, NSParagraphStyleAttributeName : paragraphStyle}];
-        } else {
-            if (index % 2 == 0) {
-                oneCommentString = [[NSMutableAttributedString alloc] initWithString:baseString attributes:@{NSFontAttributeName : lightFont, NSParagraphStyleAttributeName : paragraphStyle}];
-            } else {
-                oneCommentString = [[NSMutableAttributedString alloc] initWithString:baseString attributes:@{NSFontAttributeName : lightFont, NSParagraphStyleAttributeName : paragraphRightAlignedStyle}];
-            }
-            
-        }
+        oneCommentString = [[NSMutableAttributedString alloc] initWithString:baseString attributes:@{NSFontAttributeName : lightFont, NSParagraphStyleAttributeName : paragraphStyle}];
         
         NSRange usernameRange = [baseString rangeOfString:comment.from.userName];
         [oneCommentString addAttribute:NSFontAttributeName value:boldFont range:usernameRange];
@@ -230,6 +205,12 @@ static NSParagraphStyle *paragraphRightAlignedStyle;
     self.mediaImageView.image = _mediaItem.image;
     self.usernameAndCaptionLabel.attributedText = [self usernameAndCaptionString];
     self.commentLabel.attributedText = [self commentString];
+    
+    if (_mediaItem.image) {
+        self.imageHeightConstraint.constant = self.mediaItem.image.size.height / self.mediaItem.image.size.width * CGRectGetWidth(self.contentView.bounds);
+    } else {
+        self.imageHeightConstraint.constant = 0;
+    }
 }
 
 + (CGFloat) heightForMediaItem:(Media *)mediaItem width:(CGFloat)width {
@@ -244,8 +225,12 @@ static NSParagraphStyle *paragraphRightAlignedStyle;
     return CGRectGetMaxY(layoutCell.commentLabel.frame);
 }
 
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
+    [super setHighlighted:NO animated:animated];
+}
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
+    [super setSelected:NO animated:animated];
 
     // Configure the view for the selected state
 }

@@ -73,23 +73,23 @@ NSString *const LoginViewControllerDidGetAccessTokenNotification = @"LoginViewCo
     }
 }
 
-- (void) updateBackButton {
-    if ([self.webView canGoBack]) {
-        if (!self.navigationItem.leftBarButtonItem) {
-            [self.navigationItem setHidesBackButton:YES animated:NO];
-            UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"< Login" style:UIBarButtonItemStylePlain target:self action:@selector(backButtonClicked)];
-            self.navigationItem.leftBarButtonItem = backButton;
-        } 
-    } else {
-        [self.navigationItem setLeftBarButtonItem:nil animated:YES];
-    }
-}
-
-- (void) backButtonClicked {
-    if ([self.webView canGoBack]) {
-        [self.webView goBack];
-    }
-}
+//- (void) updateBackButton {
+//    if ([self.webView canGoBack]) {
+//        if (!self.navigationItem.leftBarButtonItem) {
+//            [self.navigationItem setHidesBackButton:YES animated:NO];
+//            UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"< Login" style:UIBarButtonItemStylePlain target:self action:@selector(backButtonClicked)];
+//            self.navigationItem.leftBarButtonItem = backButton;
+//        } 
+//    } else {
+//        [self.navigationItem setLeftBarButtonItem:nil animated:YES];
+//    }
+//}
+//
+//- (void) backButtonClicked {
+//    if ([self.webView canGoBack]) {
+//        [self.webView goBack];
+//    }
+//}
 
 #pragma mark - UIWebView delegate methods
 
@@ -112,8 +112,8 @@ NSString *const LoginViewControllerDidGetAccessTokenNotification = @"LoginViewCo
 //    [self updateBackButton];
 //}
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
-    [self updateBackButton];
-}
+//- (void)webViewDidFinishLoad:(UIWebView *)webView {
+//    [self updateBackButton];
+//}
 
 @end
