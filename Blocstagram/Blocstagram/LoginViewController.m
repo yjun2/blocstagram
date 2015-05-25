@@ -22,11 +22,11 @@ NSString *const LoginViewControllerDidGetAccessTokenNotification = @"LoginViewCo
 - (void)loadView {
     [super viewDidLoad];
     
-    UIWebView *instaLoginView = [[UIWebView alloc] init];
-    instaLoginView.delegate = self;
+    UIWebView *webView = [[UIWebView alloc] init];
+    webView.delegate = self;
     
-    self.webView = instaLoginView;
-    self.view = instaLoginView;
+    self.webView = webView;
+    self.view = webView;
 
     [self.navigationItem setTitle:@"Instagram Login"];
     
@@ -101,6 +101,8 @@ NSString *const LoginViewControllerDidGetAccessTokenNotification = @"LoginViewCo
         NSRange rangeOfAccessTokenParameter = [urlString rangeOfString:@"access_token="];
         NSUInteger indexOfTokenStarting = rangeOfAccessTokenParameter.location + rangeOfAccessTokenParameter.length;
         NSString *accessToken = [urlString substringFromIndex:indexOfTokenStarting];
+        
+        // posts notification for other classes that are observing
         [[NSNotificationCenter defaultCenter] postNotificationName:LoginViewControllerDidGetAccessTokenNotification object:accessToken];
         return NO;
     }
