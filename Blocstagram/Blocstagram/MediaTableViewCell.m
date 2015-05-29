@@ -11,17 +11,18 @@
 #import "User.h"
 #import "Comment.h"
 
-@interface MediaTableViewCell()
+@interface MediaTableViewCell() <UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) UIImageView *mediaImageView;
 @property (nonatomic, strong) UILabel *usernameAndCaptionLabel;
 @property (nonatomic, strong) UILabel *commentLabel;
 
 @property (nonatomic, strong) NSLayoutConstraint *imageHeightConstraint;
-//@property (nonatomic, strong) NSLayoutConstraint *imageHeightConstraintX;
-//@property (nonatomic, strong) NSLayoutConstraint *imageWidthConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *usernameAndCaptionLabelHeightConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *commentLabelHeightConstraint;
+
+@property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
+@property (nonatomic, strong) UILongPressGestureRecognizer *longPressGestureRecognizer;
 
 @end
 
@@ -66,6 +67,16 @@ static NSParagraphStyle *paragraphRightAlignedStyle;
     if (self) {
         self.mediaImageView = [[UIImageView alloc] init];
         self.mediaImageView.backgroundColor = [UIColor redColor];
+        self.mediaImageView.userInteractionEnabled = YES;
+        
+        self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapFired:)];
+        self.tapGestureRecognizer.delegate = self;
+        [self.mediaImageView addGestureRecognizer:self.tapGestureRecognizer];
+        
+        self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressed:)];
+        self.longPressGestureRecognizer.delegate = self;
+        [self.mediaImageView addGestureRecognizer:self.longPressGestureRecognizer];
+        
         self.usernameAndCaptionLabel = [[UILabel alloc] init];
         self.usernameAndCaptionLabel.numberOfLines = 0;
         self.usernameAndCaptionLabel.backgroundColor = usernameLabelGray;
@@ -138,7 +149,7 @@ static NSParagraphStyle *paragraphRightAlignedStyle;
 
 
 - (NSAttributedString *) usernameAndCaptionString {
-    CGFloat usernameFontSize = 15;
+    CGFloat usernameFontSize = 12;
     
     NSString *baseString = [NSString stringWithFormat:@"%@ %@", self.mediaItem.user.userName, self.mediaItem.caption];
     
@@ -148,7 +159,7 @@ static NSParagraphStyle *paragraphRightAlignedStyle;
     [mutableUsernameCaptionString addAttribute:NSFontAttributeName value:[boldFont fontWithSize:usernameFontSize] range:usernameRange];
     [mutableUsernameCaptionString addAttribute:NSForegroundColorAttributeName value:linkColor range:usernameRange];
     
-    CGFloat spacing = 5;
+    CGFloat spacing = 1;
     NSRange captionRange = [baseString rangeOfString:self.mediaItem.caption];
     [mutableUsernameCaptionString addAttribute:NSKernAttributeName value:@(spacing) range:captionRange];
     
@@ -225,6 +236,13 @@ static NSParagraphStyle *paragraphRightAlignedStyle;
     return CGRectGetMaxY(layoutCell.commentLabel.frame);
 }
 
++ (void)presentActivityViewController:(NSArray *)itemsToShare viewController:(UIViewController *)vc {
+    if (itemsToShare.count > 0) {
+        UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:itemsToShare applicationActivities:nil];
+        [vc presentViewController:activityVC animated:YES completion:nil];
+    }
+}
+
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
     [super setHighlighted:NO animated:animated];
 }
@@ -233,6 +251,22 @@ static NSParagraphStyle *paragraphRightAlignedStyle;
     [super setSelected:NO animated:animated];
 
     // Configure the view for the selected state
+}
+
+#pragma mark - tap gesturizer
+
+- (void) tapFired:(UITapGestureRecognizer *)sender {
+    [self.delegate cell:self didTapImageView:self.mediaImageView];
+}
+
+- (void) longPressed:(UILongPressGestureRecognizer *)sender {
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        [self.delegate cell:self didLongPressImageView:self.mediaImageView];
+    }
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    return self.isEditing == NO;
 }
 
 @end

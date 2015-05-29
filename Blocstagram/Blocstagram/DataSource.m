@@ -65,9 +65,7 @@
                         self.mediaItems = mutableMediaItems;
                         
                         
-                        [self requestNewItemsWithCompletionHandler:^(NSError *error) {
-                        
-                        }];
+                        [self requestNewItemsWithCompletionHandler:nil];
                         
                         [self didChangeValueForKey:@"mediaItems"];
                         
