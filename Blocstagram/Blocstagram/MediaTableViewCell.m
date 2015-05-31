@@ -23,7 +23,7 @@
 @property (nonatomic, strong) NSLayoutConstraint *commentLabelHeightConstraint;
 
 @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
-@property (nonatomic, strong) UITapGestureRecognizer *doubleTapGestureRecognizer;
+@property (nonatomic, strong) UITapGestureRecognizer *twoFingersTapGestureRecognizer;
 @property (nonatomic, strong) UILongPressGestureRecognizer *longPressGestureRecognizer;
 
 @end
@@ -75,11 +75,10 @@ static NSParagraphStyle *paragraphRightAlignedStyle;
         self.tapGestureRecognizer.delegate = self;
         [self.mediaImageView addGestureRecognizer:self.tapGestureRecognizer];
         
-        self.doubleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapFired:)];
-        self.doubleTapGestureRecognizer.delegate = self;
-        self.doubleTapGestureRecognizer.numberOfTapsRequired = 2;
-        [self.mediaImageView addGestureRecognizer:self.doubleTapGestureRecognizer];
-        [self.tapGestureRecognizer requireGestureRecognizerToFail:self.doubleTapGestureRecognizer];
+        self.twoFingersTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(twoFingersTapFired:)];
+        self.twoFingersTapGestureRecognizer.delegate = self;
+        self.twoFingersTapGestureRecognizer.numberOfTouchesRequired = 2;
+        [self.mediaImageView addGestureRecognizer:self.twoFingersTapGestureRecognizer];
         
         self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressed:)];
         self.longPressGestureRecognizer.delegate = self;
@@ -267,7 +266,7 @@ static NSParagraphStyle *paragraphRightAlignedStyle;
     [self.delegate cell:self didTapImageView:self.mediaImageView];
 }
 
-- (void) doubleTapFired:(UITapGestureRecognizer *)sender {
+- (void) twoFingersTapFired:(UITapGestureRecognizer *)sender {
     NSLog(@"double tapped the image");
     [[DataSource sharedInstance] downloadImageForMediaItem:self.mediaItem];
 }
