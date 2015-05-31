@@ -268,7 +268,7 @@ static NSParagraphStyle *paragraphRightAlignedStyle;
 
 - (void) twoFingersTapFired:(UITapGestureRecognizer *)sender {
     NSLog(@"double tapped the image");
-    [[DataSource sharedInstance] downloadImageForMediaItem:self.mediaItem];
+    [self.delegate cell:self didTwoFingerTapImageView:self.mediaImageView];
 }
 
 - (void) longPressed:(UILongPressGestureRecognizer *)sender {

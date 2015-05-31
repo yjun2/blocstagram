@@ -177,4 +177,8 @@
     [MediaTableViewCell presentActivityViewController:itemsToShare viewController:self];
 }
 
+- (void)cell:(MediaTableViewCell *)cell didTwoFingerTapImageView:(UIImageView *)imageView {
+    [[DataSource sharedInstance] downloadImageForMediaItem:cell.mediaItem];
+}
+
 @end
