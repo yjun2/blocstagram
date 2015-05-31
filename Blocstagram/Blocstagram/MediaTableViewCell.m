@@ -10,6 +10,7 @@
 #import "Media.h"
 #import "User.h"
 #import "Comment.h"
+#import "DataSource.h"
 
 @interface MediaTableViewCell() <UIGestureRecognizerDelegate>
 
@@ -22,6 +23,7 @@
 @property (nonatomic, strong) NSLayoutConstraint *commentLabelHeightConstraint;
 
 @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
+@property (nonatomic, strong) UITapGestureRecognizer *doubleTapGestureRecognizer;
 @property (nonatomic, strong) UILongPressGestureRecognizer *longPressGestureRecognizer;
 
 @end
@@ -72,6 +74,12 @@ static NSParagraphStyle *paragraphRightAlignedStyle;
         self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapFired:)];
         self.tapGestureRecognizer.delegate = self;
         [self.mediaImageView addGestureRecognizer:self.tapGestureRecognizer];
+        
+        self.doubleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapFired:)];
+        self.doubleTapGestureRecognizer.delegate = self;
+        self.doubleTapGestureRecognizer.numberOfTapsRequired = 2;
+        [self.mediaImageView addGestureRecognizer:self.doubleTapGestureRecognizer];
+        [self.tapGestureRecognizer requireGestureRecognizerToFail:self.doubleTapGestureRecognizer];
         
         self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressed:)];
         self.longPressGestureRecognizer.delegate = self;
@@ -257,6 +265,11 @@ static NSParagraphStyle *paragraphRightAlignedStyle;
 
 - (void) tapFired:(UITapGestureRecognizer *)sender {
     [self.delegate cell:self didTapImageView:self.mediaImageView];
+}
+
+- (void) doubleTapFired:(UITapGestureRecognizer *)sender {
+    NSLog(@"double tapped the image");
+    [[DataSource sharedInstance] downloadImageForMediaItem:self.mediaItem];
 }
 
 - (void) longPressed:(UILongPressGestureRecognizer *)sender {
