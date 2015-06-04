@@ -94,6 +94,15 @@
     }   
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+//    NSLog(@"will display row: %d", (int)indexPath.row);
+//    Media *mediaItem = [DataSource sharedInstance].mediaItems[indexPath.row];
+//    if (mediaItem.downloadState == MediaDownloadStateNeedsImage) {
+//        NSLog(@"fetching image from willDisplayCell");
+//        [[DataSource sharedInstance] downloadImageForMediaItem:mediaItem];
+//    }
+}
+
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
     Media *media = [DataSource sharedInstance].mediaItems[indexPath.row];
     if (media.image) {
@@ -111,16 +120,54 @@
     }];
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [self infiniteScrollIfNecessary];
-}
-
 - (void) infiniteScrollIfNecessary {
     NSIndexPath *bottomIndexPath = [[self.tableView indexPathsForVisibleRows] lastObject];
     if (bottomIndexPath && bottomIndexPath.row == [DataSource sharedInstance].mediaItems.count - 1) {
         [[DataSource sharedInstance] requestOldItemsWithCompletionHandler:nil];
     }
 }
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+//    scrollView.decelerationRate = UIScrollViewDecelerationRateFast;
+    
+    CGPoint bottomPoint = CGPointMake(0 ,scrollView.contentOffset.y);
+    NSInteger row = [[self.tableView indexPathForRowAtPoint:bottomPoint] row];
+    Media *mediaItem = [DataSource sharedInstance].mediaItems[(long)row];
+    if (mediaItem.downloadState == MediaDownloadStateNeedsImage) {
+        NSLog(@"fetching image scrollDidScroll");
+        [[DataSource sharedInstance] downloadImageForMediaItem:mediaItem];
+    }
+    
+    [self infiniteScrollIfNecessary];
+}
+
+//- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
+////    scrollView.decelerationRate = UIScrollViewDecelerationRateFast;
+//    CGPoint bottomPoint = CGPointMake(0 ,scrollView.contentOffset.y);
+//    
+////    NSLog(@"%ld", (long)[[self.tableView indexPathForRowAtPoint:bottomPoint] row]);
+//    
+//    NSInteger row = [[self.tableView indexPathForRowAtPoint:bottomPoint] row];
+//    Media *mediaItem = [DataSource sharedInstance].mediaItems[(long)row];
+//    if (mediaItem.downloadState == MediaDownloadStateNeedsImage) {
+//        NSLog(@"fetching image willbegindecelerating");
+//        [[DataSource sharedInstance] downloadImageForMediaItem:mediaItem];
+//    }
+//    
+//}
+//
+//- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+//    CGPoint bottomPoint = CGPointMake(0 ,scrollView.contentOffset.y);
+//    
+////    NSLog(@"%ld", (long)[[self.tableView indexPathForRowAtPoint:bottomPoint] row]);
+//    
+//    NSInteger row = [[self.tableView indexPathForRowAtPoint:bottomPoint] row];
+//    Media *mediaItem = [DataSource sharedInstance].mediaItems[(long)row];
+//    if (mediaItem.downloadState == MediaDownloadStateNeedsImage) {
+//        NSLog(@"fetching image didenddecelrating");
+//        [[DataSource sharedInstance] downloadImageForMediaItem:mediaItem];
+//    }
+//}
 
 #pragma mark - key-value observing
 
