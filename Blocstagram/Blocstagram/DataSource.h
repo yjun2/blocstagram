@@ -30,8 +30,6 @@ typedef void (^NewItemCompletionBlock)(NSError *error);
 - (void) requestOldItemsWithCompletionHandler:(NewItemCompletionBlock)completionHandler;
 
 - (void) downloadImageForMediaItem:(Media *)mediaItem;
-
-// checkpoint #30 assignment
-//- (void) moveToTop:(NSUInteger)index;
+- (void) toggleLikeOnMediaItem:(Media *)mediaItem withCompletionHandler:(void (^)(void))completionHandler;
 
 @end

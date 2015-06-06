@@ -128,13 +128,10 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-//    scrollView.decelerationRate = UIScrollViewDecelerationRateFast;
-    
     CGPoint bottomPoint = CGPointMake(0 ,scrollView.contentOffset.y);
     NSInteger row = [[self.tableView indexPathForRowAtPoint:bottomPoint] row];
     Media *mediaItem = [DataSource sharedInstance].mediaItems[(long)row];
     if (mediaItem.downloadState == MediaDownloadStateNeedsImage) {
-        NSLog(@"fetching image scrollDidScroll");
         [[DataSource sharedInstance] downloadImageForMediaItem:mediaItem];
     }
     
@@ -145,7 +142,7 @@
 ////    scrollView.decelerationRate = UIScrollViewDecelerationRateFast;
 //    CGPoint bottomPoint = CGPointMake(0 ,scrollView.contentOffset.y);
 //    
-////    NSLog(@"%ld", (long)[[self.tableView indexPathForRowAtPoint:bottomPoint] row]);
+//    
 //    
 //    NSInteger row = [[self.tableView indexPathForRowAtPoint:bottomPoint] row];
 //    Media *mediaItem = [DataSource sharedInstance].mediaItems[(long)row];
@@ -226,6 +223,18 @@
 
 - (void)cell:(MediaTableViewCell *)cell didTwoFingerTapImageView:(UIImageView *)imageView {
     [[DataSource sharedInstance] downloadImageForMediaItem:cell.mediaItem];
+}
+
+- (void)cellDidPressLikeButton:(MediaTableViewCell *)cell {
+    Media *item = cell.mediaItem;
+    
+    [[DataSource sharedInstance] toggleLikeOnMediaItem:item withCompletionHandler:^{
+        if (cell.mediaItem == item) {
+            cell.mediaItem = item;
+        }
+    }];
+    
+    cell.mediaItem = item;
 }
 
 @end
