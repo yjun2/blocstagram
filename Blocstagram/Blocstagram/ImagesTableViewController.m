@@ -16,7 +16,9 @@
 
 @interface ImagesTableViewController () <MediaTableViewCellDelegate>
 
-- (NSArray *) items;
+@property (nonatomic, weak) UIView *lastSelectedCommentView;
+@property (nonatomic, assign) CGFloat lastKeyboardAdjustment;
+
 
 @end
 
@@ -31,10 +33,6 @@
     return self;
 }
 
-- (NSArray *) items {
-    return [DataSource sharedInstance].mediaItems;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -47,11 +45,23 @@
     [self.refreshControl addTarget:self action:@selector(refreshControlDidFire:) forControlEvents:UIControlEventValueChanged];
     
     [self.tableView registerClass:[MediaTableViewCell class] forCellReuseIdentifier:@"mediaCell"];
+    
+    self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
 
 }
 
 - (void) dealloc {
     [[DataSource sharedInstance] removeObserver:self forKeyPath:@"mediaItems"];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -59,10 +69,23 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - view
+
+- (void)viewWillAppear:(BOOL)animated {
+    NSIndexPath *indexPath = self.tableView.indexPathForSelectedRow;
+    if (indexPath) {
+        [self.tableView deselectRowAtIndexPath:indexPath animated:animated];
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self items].count;
+    return [DataSource sharedInstance].mediaItems.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -73,7 +96,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    Media *item = self.items[indexPath.row];
+    Media *item = [DataSource sharedInstance].mediaItems[indexPath.row];
     return [MediaTableViewCell heightForMediaItem:item width:CGRectGetWidth(self.view.frame)];
 }
 
@@ -86,7 +109,7 @@
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        Media *item = self.items[indexPath.row];
+        Media *item = [DataSource sharedInstance].mediaItems[indexPath.row];
         [[DataSource sharedInstance] deleteMediaItem:item];
         
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
@@ -95,21 +118,24 @@
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-//    NSLog(@"will display row: %d", (int)indexPath.row);
-//    Media *mediaItem = [DataSource sharedInstance].mediaItems[indexPath.row];
-//    if (mediaItem.downloadState == MediaDownloadStateNeedsImage) {
-//        NSLog(@"fetching image from willDisplayCell");
-//        [[DataSource sharedInstance] downloadImageForMediaItem:mediaItem];
-//    }
+    Media *mediaItem = [DataSource sharedInstance].mediaItems[indexPath.row];
+    if (mediaItem.downloadState == MediaDownloadStateNeedsImage) {
+        [[DataSource sharedInstance] downloadImageForMediaItem:mediaItem];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
     Media *media = [DataSource sharedInstance].mediaItems[indexPath.row];
     if (media.image) {
-        return 350;
+        return 450;
     } else {
-        return 150;
+        return 250;
     }
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    MediaTableViewCell *cell = (MediaTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+    [cell stopComposingComment];
 }
 
 #pragma mark - UIRefreshControl
@@ -128,43 +154,16 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGPoint bottomPoint = CGPointMake(0 ,scrollView.contentOffset.y);
-    NSInteger row = [[self.tableView indexPathForRowAtPoint:bottomPoint] row];
-    Media *mediaItem = [DataSource sharedInstance].mediaItems[(long)row];
-    if (mediaItem.downloadState == MediaDownloadStateNeedsImage) {
-        [[DataSource sharedInstance] downloadImageForMediaItem:mediaItem];
-    }
+//    CGPoint bottomPoint = CGPointMake(0 ,scrollView.contentOffset.y);
+//    NSInteger row = [[self.tableView indexPathForRowAtPoint:bottomPoint] row];
+//    Media *mediaItem = [DataSource sharedInstance].mediaItems[(long)row];
+//    if (mediaItem.downloadState == MediaDownloadStateNeedsImage) {
+//        [[DataSource sharedInstance] downloadImageForMediaItem:mediaItem];
+//    }
     
     [self infiniteScrollIfNecessary];
 }
 
-//- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
-////    scrollView.decelerationRate = UIScrollViewDecelerationRateFast;
-//    CGPoint bottomPoint = CGPointMake(0 ,scrollView.contentOffset.y);
-//    
-//    
-//    
-//    NSInteger row = [[self.tableView indexPathForRowAtPoint:bottomPoint] row];
-//    Media *mediaItem = [DataSource sharedInstance].mediaItems[(long)row];
-//    if (mediaItem.downloadState == MediaDownloadStateNeedsImage) {
-//        NSLog(@"fetching image willbegindecelerating");
-//        [[DataSource sharedInstance] downloadImageForMediaItem:mediaItem];
-//    }
-//    
-//}
-//
-//- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-//    CGPoint bottomPoint = CGPointMake(0 ,scrollView.contentOffset.y);
-//    
-////    NSLog(@"%ld", (long)[[self.tableView indexPathForRowAtPoint:bottomPoint] row]);
-//    
-//    NSInteger row = [[self.tableView indexPathForRowAtPoint:bottomPoint] row];
-//    Media *mediaItem = [DataSource sharedInstance].mediaItems[(long)row];
-//    if (mediaItem.downloadState == MediaDownloadStateNeedsImage) {
-//        NSLog(@"fetching image didenddecelrating");
-//        [[DataSource sharedInstance] downloadImageForMediaItem:mediaItem];
-//    }
-//}
 
 #pragma mark - key-value observing
 
@@ -235,6 +234,89 @@
     }];
     
     cell.mediaItem = item;
+}
+
+- (void)cellWillStartComposingComment:(MediaTableViewCell *)cell {
+    self.lastSelectedCommentView = (UIView *)cell.commentView;
+}
+
+- (void)cell:(MediaTableViewCell *)cell didComposeComment:(NSString *)comment {
+    [[DataSource sharedInstance] commentOnMediaItems:cell.mediaItem withCommentText:comment];
+}
+
+#pragma mark - keyboard handling
+
+- (void) keyboardWillShow:(NSNotification *)notification {
+    // Get the frame of the keyboard within self.view's coordinate system
+    NSValue *frameValue = notification.userInfo[UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardFrameInScreenCoordinates = frameValue.CGRectValue;
+    CGRect keyboardFrameInViewCoordinates = [self.navigationController.view convertRect:keyboardFrameInScreenCoordinates fromView:nil];
+    
+    // Get the frame of the coment view in the same coordinate system
+    CGRect commentViewFrameInViewCoordinates = [self.navigationController.view convertRect:self.lastSelectedCommentView.bounds fromView:self.lastSelectedCommentView];
+    
+    CGPoint contentOffset = self.tableView.contentOffset;
+    UIEdgeInsets contentInsets = self.tableView.contentInset;
+    UIEdgeInsets scrollIndicatorInsets = self.tableView.scrollIndicatorInsets;
+    CGFloat heightToScroll = 0;
+    
+    CGFloat keyboardY = CGRectGetMinY(keyboardFrameInViewCoordinates);
+    CGFloat commentViewY = CGRectGetMinY(commentViewFrameInViewCoordinates);
+    CGFloat difference = commentViewY - keyboardY;
+    
+    if (difference > 0) {
+        heightToScroll += difference;
+    }
+    
+    if (CGRectIntersectsRect(keyboardFrameInViewCoordinates, commentViewFrameInViewCoordinates)) {
+        CGRect intersectionRect = CGRectIntersection(keyboardFrameInViewCoordinates, commentViewFrameInViewCoordinates);
+        heightToScroll += CGRectGetHeight(intersectionRect);
+    }
+    
+    if (heightToScroll > 0) {
+        contentInsets.bottom += heightToScroll;
+        scrollIndicatorInsets.bottom += heightToScroll;
+        contentOffset.y += heightToScroll;
+        
+        NSNumber *durationNumber = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
+        NSNumber *curveNumber = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
+        
+        NSTimeInterval duration = durationNumber.doubleValue;
+        UIViewAnimationCurve curve = curveNumber.unsignedIntegerValue;
+        UIViewAnimationOptions options = curve << 16;
+        
+        [UIView animateWithDuration:duration
+                              delay:0
+                            options:options
+                         animations:^{
+                             self.tableView.contentInset = contentInsets;
+                             self.tableView.scrollIndicatorInsets = scrollIndicatorInsets;
+                             self.tableView.contentOffset = contentOffset;
+                         } completion:nil];
+    }
+}
+
+- (void) keyboardWillHide:(NSNotification *)notification {
+    UIEdgeInsets contentInsets = self.tableView.contentInset;
+    contentInsets.bottom -= self.lastKeyboardAdjustment;
+    
+    UIEdgeInsets scrollIndicatorInsets = self.tableView.scrollIndicatorInsets;
+    scrollIndicatorInsets.bottom -= self.lastKeyboardAdjustment;
+    
+    NSNumber *durationNumber = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
+    NSNumber *curveNumber = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
+    
+    NSTimeInterval duration = durationNumber.doubleValue;
+    UIViewAnimationCurve curve = curveNumber.unsignedIntegerValue;
+    UIViewAnimationOptions options = curve << 16;
+    
+    [UIView animateWithDuration:duration
+                          delay:0
+                        options:options
+                     animations:^{
+                         self.tableView.contentInset = contentInsets;
+                         self.tableView.scrollIndicatorInsets = scrollIndicatorInsets;
+                     } completion:nil];
 }
 
 @end
