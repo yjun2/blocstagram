@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		20A77F52134D1269EAF0B56B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B476A251B22965CF6F71958 /* libPods.a */; };
+		2E0A17D01B2FD92300A59B1A /* CropBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A17CF1B2FD92300A59B1A /* CropBox.m */; };
+		2E0A17D31B2FDF3400A59B1A /* CropImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A17D21B2FDF3400A59B1A /* CropImageViewController.m */; };
+		2E0A17D61B2FE4EA00A59B1A /* ImageLibraryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A17D51B2FE4EA00A59B1A /* ImageLibraryViewController.m */; };
 		2E25B3C41B254F0700A4572B /* ComposeCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E25B3C31B254F0700A4572B /* ComposeCommentView.m */; };
 		2E3EB6371B157D4400E6F6FE /* MediaFullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E3EB6361B157D4400E6F6FE /* MediaFullScreenViewController.m */; };
 		2E771EB11B229576007A59FD /* LikeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E771EB01B229576007A59FD /* LikeButton.m */; };
@@ -51,6 +54,12 @@
 
 /* Begin PBXFileReference section */
 		2B476A251B22965CF6F71958 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E0A17CE1B2FD92300A59B1A /* CropBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CropBox.h; sourceTree = "<group>"; };
+		2E0A17CF1B2FD92300A59B1A /* CropBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CropBox.m; sourceTree = "<group>"; };
+		2E0A17D11B2FDF3400A59B1A /* CropImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CropImageViewController.h; sourceTree = "<group>"; };
+		2E0A17D21B2FDF3400A59B1A /* CropImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CropImageViewController.m; sourceTree = "<group>"; };
+		2E0A17D41B2FE4EA00A59B1A /* ImageLibraryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageLibraryViewController.h; sourceTree = "<group>"; };
+		2E0A17D51B2FE4EA00A59B1A /* ImageLibraryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageLibraryViewController.m; sourceTree = "<group>"; };
 		2E25B3C21B254F0700A4572B /* ComposeCommentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeCommentView.h; sourceTree = "<group>"; };
 		2E25B3C31B254F0700A4572B /* ComposeCommentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeCommentView.m; sourceTree = "<group>"; };
 		2E3EB6351B157D4400E6F6FE /* MediaFullScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaFullScreenViewController.h; sourceTree = "<group>"; };
@@ -179,6 +188,12 @@
 				2EA41D751B29F72600087D7F /* CameraViewController.m */,
 				2EA41D771B2A0FE400087D7F /* UIView+ImageUtilities.h */,
 				2EA41D781B2A0FE400087D7F /* UIView+ImageUtilities.m */,
+				2E0A17CE1B2FD92300A59B1A /* CropBox.h */,
+				2E0A17CF1B2FD92300A59B1A /* CropBox.m */,
+				2E0A17D11B2FDF3400A59B1A /* CropImageViewController.h */,
+				2E0A17D21B2FDF3400A59B1A /* CropImageViewController.m */,
+				2E0A17D41B2FE4EA00A59B1A /* ImageLibraryViewController.h */,
+				2E0A17D51B2FE4EA00A59B1A /* ImageLibraryViewController.m */,
 			);
 			path = Blocstagram;
 			sourceTree = "<group>";
@@ -391,7 +406,10 @@
 				2E3EB6371B157D4400E6F6FE /* MediaFullScreenViewController.m in Sources */,
 				2E96FA691B200A8800BD1183 /* CircleSpinnerView.m in Sources */,
 				2EBAE0B01AF925BD0098BD75 /* User.m in Sources */,
+				2E0A17D61B2FE4EA00A59B1A /* ImageLibraryViewController.m in Sources */,
+				2E0A17D01B2FD92300A59B1A /* CropBox.m in Sources */,
 				2EBAE0B61AF927C80098BD75 /* Comment.m in Sources */,
+				2E0A17D31B2FDF3400A59B1A /* CropImageViewController.m in Sources */,
 				2EA41D791B2A0FE400087D7F /* UIView+ImageUtilities.m in Sources */,
 				2EBAE0BC1AF970B40098BD75 /* MediaTableViewCell.m in Sources */,
 				2EBAE0B31AF9266D0098BD75 /* Media.m in Sources */,
