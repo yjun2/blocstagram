@@ -15,6 +15,8 @@
 @implementation FilterCollectionViewCell
 
 - (void)layoutSubviews {
+    [super layoutSubviews];
+    
     self.thumbnail = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.thumbnailEdgeSize, self.thumbnailEdgeSize)];
     self.thumbnail.contentMode = UIViewContentModeScaleAspectFill;
     self.thumbnail.clipsToBounds = YES;

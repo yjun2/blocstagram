@@ -84,7 +84,7 @@
         self.navigationItem.rightBarButtonItem = self.sendBarButton;
     }
     
-    //[self.filterCollectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cell"];
+//    [self.filterCollectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cell"];
     [self.filterCollectionView registerClass:[FilterCollectionViewCell class] forCellWithReuseIdentifier:@"filterCell"];
     self.filterCollectionView.backgroundColor = [UIColor whiteColor];
     
@@ -131,18 +131,16 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 //    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-    FilterCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"filterCell" forIndexPath:indexPath];
-    
+//    
 //    static NSInteger imageViewTag = 1000;
 //    static NSInteger labelTag = 1001;
 //    
 //    UIImageView *thumbnail = (UIImageView *)[cell.contentView viewWithTag:imageViewTag];
 //    UILabel *label = (UILabel *)[cell.contentView viewWithTag:labelTag];
-    
-    UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *)self.filterCollectionView.collectionViewLayout;
-    CGFloat thumbnailEdgeSize = flowLayout.itemSize.width;
-    cell.thumbnailEdgeSize = thumbnailEdgeSize;
-    
+//    
+//    UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *)self.filterCollectionView.collectionViewLayout;
+//    CGFloat thumbnailEdgeSize = flowLayout.itemSize.width;
+//    
 //    if (!thumbnail) {
 //        thumbnail = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, thumbnailEdgeSize, thumbnailEdgeSize)];
 //        thumbnail.contentMode = UIViewContentModeScaleAspectFill;
@@ -159,10 +157,16 @@
 //        label.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:10];
 //        [cell.contentView addSubview:label];
 //    }
-   
-//    cell.thumbnail.image = self.filterImages[indexPath.row];
-//    cell.label.text = self.filterTitles[indexPath.row];
+//   
+//    thumbnail.image = self.filterImages[indexPath.row];
+//    label.text = self.filterTitles[indexPath.row];
     
+    FilterCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"filterCell" forIndexPath:indexPath];
+    
+    UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *)self.filterCollectionView.collectionViewLayout;
+    CGFloat thumbnailEdgeSize = flowLayout.itemSize.width;
+    cell.thumbnailEdgeSize = thumbnailEdgeSize;
+
     cell.thumbnail.image = self.filterImages[indexPath.row];
     cell.label.text = self.filterTitles[indexPath.row];
     
@@ -236,6 +240,7 @@
 #pragma mark - photo filters
 
 - (void) addCIImageToCollectionView:(CIImage *)ciImage withFilterTitle:(NSString *)filterTitle {
+    
     UIImage *image = [UIImage imageWithCIImage:ciImage scale:self.sourceImage.scale orientation:self.sourceImage.imageOrientation];
     
     if (image) {
@@ -247,6 +252,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             NSUInteger newIndex = self.filterImages.count;
+            
             [self.filterImages addObject:image];
             [self.filterTitles addObject:filterTitle];
             

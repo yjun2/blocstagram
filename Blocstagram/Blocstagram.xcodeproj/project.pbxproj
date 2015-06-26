@@ -42,6 +42,7 @@
 		2EC158641B0932E8005465A5 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EC158631B0932E8005465A5 /* LoginViewController.m */; };
 		2ECF0A901B2941D200D07EF1 /* CameraToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ECF0A8F1B2941D200D07EF1 /* CameraToolbar.m */; };
 		2EE634331B3904140051630C /* FilterCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE634321B3904140051630C /* FilterCollectionViewCell.m */; };
+		2EECD2641B3DF02800FE1EFB /* UserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EECD2631B3DF02800FE1EFB /* UserTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -114,6 +115,7 @@
 		2ECF0A8F1B2941D200D07EF1 /* CameraToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraToolbar.m; sourceTree = "<group>"; };
 		2EE634311B3904140051630C /* FilterCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterCollectionViewCell.h; sourceTree = "<group>"; };
 		2EE634321B3904140051630C /* FilterCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterCollectionViewCell.m; sourceTree = "<group>"; };
+		2EECD2631B3DF02800FE1EFB /* UserTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserTests.m; sourceTree = "<group>"; };
 		95A547B188BC4D2E6C53DBC8 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		9A301F1DC8367FC1F3F0E375 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -222,6 +224,7 @@
 			children = (
 				2E9726E21AF6C98F00FD9B24 /* BlocstagramTests.m */,
 				2E9726E01AF6C98F00FD9B24 /* Supporting Files */,
+				2EECD2631B3DF02800FE1EFB /* UserTests.m */,
 			);
 			path = BlocstagramTests;
 			sourceTree = "<group>";
@@ -440,6 +443,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2EECD2641B3DF02800FE1EFB /* UserTests.m in Sources */,
 				2E9726E31AF6C98F00FD9B24 /* BlocstagramTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

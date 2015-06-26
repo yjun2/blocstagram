@@ -50,9 +50,9 @@
     self.doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapFired:)];
     self.doubleTap.numberOfTapsRequired = 2;
     
-    self.tapGrayArea = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGrayAreaFired:)];
-    self.tapGrayArea.cancelsTouchesInView = NO;
-    self.tapGrayArea.delegate = self;
+//    self.tapGrayArea = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGrayAreaFired:)];
+//    self.tapGrayArea.cancelsTouchesInView = NO;
+//    self.tapGrayArea.delegate = self;
     
     self.tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapFired:)];
     [self.tap requireGestureRecognizerToFail:self.doubleTap];
@@ -71,14 +71,14 @@
     [super viewWillAppear:animated];
     [self centerScrollView];
     
-    [[[[UIApplication sharedApplication] delegate] window] addGestureRecognizer:self.tapGrayArea];
+//    [[[[UIApplication sharedApplication] delegate] window] addGestureRecognizer:self.tapGrayArea];
     
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
-    [[[[UIApplication sharedApplication] delegate] window] removeGestureRecognizer:self.tapGrayArea];
+//    [[[[UIApplication sharedApplication] delegate] window] removeGestureRecognizer:self.tapGrayArea];
     
 }
 
@@ -195,16 +195,16 @@
 }
 
 
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-    return YES;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    return YES;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    return YES;
-}
+//- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+//    return YES;
+//}
+//
+//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+//    return YES;
+//}
+//
+//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+//    return YES;
+//}
 
 @end
